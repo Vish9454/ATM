@@ -5,7 +5,8 @@ ATM
 
 ## Install OS (Ubuntu) Requirements
 
-    
+## Install Django
+
 ## Clone Project
 
     git clone <repository-url>
@@ -16,7 +17,8 @@ ATM
     source venv/bin/activate
     pip install -r requirements.txt
 
-\
+## pip install -r requirements.txt
+
 ## Postgres setup
 
     pip install psycopg2
@@ -31,6 +33,7 @@ ATM
 
 
 ## run migrations
+   python manage.py makemigrations
    
    python manage.py migrate
 
@@ -39,3 +42,8 @@ ATM
     python manage.py runserver
 
 **Note:** Never forget to enable virtual environment (`source venv/bin/activate`) before running above command and use settings accordingly.
+
+
+
+API collection is as -
+https://www.getpostman.com/collections/6280bb0d5bd7b16bee10
