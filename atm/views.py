@@ -98,11 +98,3 @@ class ATMDetailOperations(viewsets.ViewSet):
         serializer.is_valid(raise_exception=True)
         serializer.save()
         return SuccessResponse({"message": success_message.get("UPDATE_SUCCESSFUL")}, status=status_code.HTTP_200_OK)
-
-
-
-    def someviews(request):
-        url = "https://www.ing.nl/api/locator/atms/"
-        return requests.get(url).json()
-
-    print(someviews())
