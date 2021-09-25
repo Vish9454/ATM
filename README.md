@@ -5,7 +5,8 @@ ATM
 
 ## Install OS (Ubuntu) Requirements
 
-    
+## Install Django
+
 ## Clone Project
 
     git clone <repository-url>
@@ -16,7 +17,8 @@ ATM
     source venv/bin/activate
     pip install -r requirements.txt
 
-\
+## pip install -r requirements.txt
+
 ## Postgres setup
 
     pip install psycopg2
@@ -31,7 +33,7 @@ ATM
 
 
 ## run migrations
-   
+   python manage.py makemigrations
    python manage.py migrate
 
 ## Running Development Server
