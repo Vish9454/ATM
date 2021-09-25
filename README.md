@@ -47,3 +47,6 @@ ATM
 
 API collection is as -
 https://www.getpostman.com/collections/6280bb0d5bd7b16bee10
+
+Install extension for Header , the link is as - 
+https://modheader.com/install
