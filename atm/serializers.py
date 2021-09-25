@@ -7,6 +7,7 @@ from django.contrib.gis.geos import Point
 
 from atm.models import User, ATMDetails
 
+
 class UserSignUpSerializer(serializers.ModelSerializer):
     """
     Users signup serializer
@@ -74,7 +75,7 @@ class LoginSerializer(serializers.ModelSerializer):
         fields = ('id', "email", "password", 'full_name', 'first_name', 'last_name')
 
 
-class ATMDeatilOperationsSerializer(serializers.ModelSerializer):
+class ATMDetailOperationsSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         request = self.context.get('request')
         lat = float(request.data.get('lat'))
@@ -91,3 +92,23 @@ class ATMDeatilOperationsSerializer(serializers.ModelSerializer):
     class Meta:
         model = ATMDetails
         fields = ('__all__')
+
+
+class ATMDetailOperationsListSerializer(serializers.ModelSerializer):
+    # address = serializers.SerializerMethodField('Address')
+
+    def to_representation(self, instance):
+        data = super(ATMDetailOperationsListSerializer, self).to_representation(instance)
+
+        data['address'] = [{"street": instance.street,
+                            "housenumber": instance.housenumber,
+                            "postalcode": instance.postalcode,
+                            "city": instance.city,
+                            "geolocation": {"lat": core_utils.get_latitude_from_obj(instance),
+                                            "lng": core_utils.get_longitude_from_obj(instance)},
+                            }]
+        return data
+
+    class Meta:
+        model = ATMDetails
+        fields = ('id', 'address', 'distance', 'openingHours', 'functionality', 'type')

@@ -11,8 +11,9 @@ from core.exception import get_custom_error
 from core.messages import success_message, validation_message
 from core.pagination import CustomPagination
 
+from atm.serializers import (UserSignUpSerializer, LoginSerializer, ATMDetailOperationsSerializer,
+                             ATMDetailOperationsListSerializer)
 
-from atm.serializers import UserSignUpSerializer, LoginSerializer, ATMDeatilOperationsSerializer
 from atm.models import User, ATMDetails
 
 
@@ -54,12 +55,13 @@ class Login(viewsets.ViewSet):
 
 
 class ATMDetailOperations(viewsets.ViewSet):
-    permission_classes = (IsAuthenticated, )
+    permission_classes = (IsAuthenticated,)
+    pagination_class = CustomPagination
+    serializer_class = ATMDetailOperationsListSerializer
     action_serializers = {
-        'create': ATMDeatilOperationsSerializer,
-        'retrieve': ATMDeatilOperationsSerializer,
-        'list': ATMDeatilOperationsSerializer,
-        'update': ATMDeatilOperationsSerializer,
+        'create': ATMDetailOperationsSerializer,
+        'retrieve': ATMDetailOperationsListSerializer,
+        'update': ATMDetailOperationsSerializer,
     }
 
     def create(self, request):
@@ -68,7 +70,7 @@ class ATMDetailOperations(viewsets.ViewSet):
             return Response(get_custom_error(status=400, message=validation_message.get("USER_NOT_FOUND"),
                                              error_location=validation_message.get("LOCATION")),
                             status=status_code.HTTP_400_BAD_REQUEST)
-        serializer = self.action_serializers.get(self.action)(data=request.data, context={'request':request})
+        serializer = self.action_serializers.get(self.action)(data=request.data, context={'request': request})
         serializer.is_valid(raise_exception=True)
         serializer.save()
         serialize_data = serializer.data
@@ -83,10 +85,14 @@ class ATMDetailOperations(viewsets.ViewSet):
 
     def list(self, request):
         obj = ATMDetails.objects.filter().all().order_by('-id')
-        if obj:
-            serializer = self.action_serializers.get(self.action)(obj, many=True)
-            return SuccessResponse(serializer.data, status=status_code.HTTP_200_OK)
-        return SuccessResponse({}, status=status_code.HTTP_200_OK)
+        pagination_class = self.pagination_class()
+        page = pagination_class.paginate_queryset(obj, request)
+        if page is not None:
+            serializer = self.serializer_class(instance=page, many=True)
+            return SuccessResponse(pagination_class.get_paginated_response(serializer.data).data,
+                                   status=status_code.HTTP_200_OK)
+        serializer = self.serializer_class(obj, many=True)
+        return SuccessResponse(serializer.data, status=status_code.HTTP_200_OK)
 
     def update(self, request, atm_id):
         atm_id = ATMDetails.objects.filter(id=atm_id, is_deleted=False).first()

@@ -120,3 +120,4 @@ class ATMDetails(BaseModel):
     openingHours = models.JSONField(blank=True, null=True)
     functionality = models.CharField(max_length=50, blank=True, null=True, verbose_name='funtionality')
     type = models.CharField(max_length=50, blank=True, null=True, verbose_name='type of ATM')
+    address = models.JSONField(blank=True, null=True)
