@@ -34,6 +34,7 @@ ATM
 
 ## run migrations
    python manage.py makemigrations
+   
    python manage.py migrate
 
 ## Running Development Server
